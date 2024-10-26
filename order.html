@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gajanand Bakery - Products</title>
+    <style>
+        body {
+            font-family: monospace;
+            background-color: antiquewhite;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+        header {
+            text-align: center;
+            padding: 50px 20px;
+            background-color: #f8b400;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+        nav ul li {
+            margin: 0 15px;
+        }
+        nav ul li a {
+            text-decoration: none;
+            color: yellow;
+        }
+        nav ul li a:hover {
+            color: orange;
+        }
+        .product-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            padding: 20px;
+        }
+        .product {
+            background-color: rgba(255, 255, 255, 0.8);
+            background-size: cover;
+            background-position: center;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin: 20px;
+            padding: 20px;
+            width: calc(33% - 40px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            color: #333;
+            position: relative;
+            overflow: hidden;
+        }
+        .product h3, .product p {
+            position: relative;
+            z-index: 1;
+        }
+        .product:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 0;
+        }
+        .product.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        img {
+            width: 100%;
+            height: auto;
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #f4f4f4;
+        }
+        @media only screen and (max-width: 600px) {
+            .product {
+                width: calc(100% - 40px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Gajanand Bakery Products</h1>
+        <nav>
+            <ul>
+                <li><a href="bakery.html">Home</a></li>
+                <li><a href="#">Products</a></li>
+                <li><a href="https://www.instagram.com/gajanand_bakery_2024/?__pwa=1">Contact Us</a></li>
+                <li><a href="#">About Us</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="product-container" id="product-container">
+        <!-- Product Items will be injected here -->
+    </div>
+    <footer>
+        <p>© 2024 Gajanand Bakery</p>
+    </footer>
+
+    <script>
+        const products = [
+            { name: 'Fresh baked cookies', description: 'Soft and freshly baked cookies, perfect with a cup of tea.', img: 'https://via.placeholder.com/300x200?text=Cookies' },
+            { name: 'Soft and fluffy buns', description: 'Ideal for sandwiches or simply enjoying with butter.', img: 'https://via.placeholder.com/300x200?text=Buns' },
+            { name: 'Traditional Indian sweets', description: 'Authentic sweets made with love and tradition.', img: 'https://via.placeholder.com/300x200?text=Sweets' },
+            { name: 'Khari', description: 'Crispy and buttery Khari, a perfect snack.', img: 'https://via.placeholder.com/300x200?text=Khari' },
+            { name: 'Toast', description: 'Crunchy toasts perfect for your breakfast.', img: 'https://via.placeholder.com/300x200?text=Toast' },
+            { name: 'Cup Cake\'s', description: 'Delicious cupcakes with various flavors.', img: 'https://via.placeholder.com/300x200?text=Cupcakes' },
+            { name: 'Farsan All type', description: 'Variety of savory snacks to munch on.', img: 'https://via.placeholder.com/300x200?text=Farsan' },
+            { name: 'Donuts', description: 'Sweet and soft donuts, a treat for your taste buds.', img: 'https://via.placeholder.com/300x200?text=Donuts' },
+            { name: 'Puff', description: 'Crispy puffs with spicy fillings.', img: 'https://via.placeholder.com/300x200?text=Puff' },
+            { name: 'Cakes (theme cake also available)', description: 'Cakes for all occasions, including custom theme cakes.', img: 'https://via.placeholder.com/300x200?text=Cakes' },
+            { name: 'Photo print cake', description: 'Personalized cakes with your favorite photos.', img: 'https://via.placeholder.com/300x200?text=Photo+Cakes' },
+            { name: 'Ice Cream from Hocco brand', description: 'Delicious ice creams from the famous Hocco brand.', img: 'https://via.placeholder.com/300x200?text=Ice+Cream' }
+        ];
+
+        const container = document.getElementById('product-container');
+        products.forEach((product, index) => {
+            const productDiv = document.createElement('div');
+            productDiv.classList.add('product');
+            productDiv.style.backgroundImage = `url(${product.img})`;
+            productDiv.style.transitionDelay = `${index * 0.1}s`; // Staggered animation delay
+
+            const content = `
+                <h3>${product.name}</h3>
+                <p>${product.description}</p>
+            `;
+            productDiv.innerHTML = content;
+            container.appendChild(productDiv);
+        });
+
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('show');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        const productElements = document.querySelectorAll('.product');
+        productElements.forEach(product => {
+            observer.observe(product);
+        });
+    </script>
+</body>
+</html>
